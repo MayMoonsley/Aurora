@@ -5,12 +5,12 @@ import { clamp } from "../../util/Util.js";
 import GridCoordinates from "../../world/GridCoordinates.js";
 import WorldScreen from "./WorldScreen.js";
 import { HighlightSelectionImage } from "../Images.js";
-import { Page } from "../GameWindow.js";
+import { Page, GameWindow } from "../GameWindow.js";
 
 // class to manage the UI canvas that shows the map
 export default class MapUI implements Page {
 
-    private static readonly pixelsPerTile: number = 64;
+    private static readonly pixelsPerTile: number = 100;
 
     private static readonly highlightImage: HTMLImageElement = HighlightSelectionImage;
 
@@ -69,69 +69,17 @@ export default class MapUI implements Page {
     }
 
     private selectTile(tile: Tile | null): void {
-        if (tile && tile.position === this.highlightedCoordinates) {
-            return; // ignore selecting a tile that is already selected
-        }
-
-        // deselect previous highlight
-        if (this.highlightedCoordinates) {
-            const prevSelection = this.world.getTileAtCoordinates(this.highlightedCoordinates);
-            this.highlightedCoordinates = null;
-            this.rerenderTile(prevSelection);
-        }
-
-        // highlight new tile
-        if (tile) {
-            this.drawSquareAtCoordinates(MapUI.highlightImage, tile.position);
-            this.highlightedCoordinates = tile.position;
-        } else {
-            this.highlightedCoordinates = null;
-        }
-
+        this.highlightedCoordinates = tile ? tile.position : null;
+        this.refresh();
         this.parentScreen.changeSidebarTile(this.highlightedCoordinates);
     }
 
     private moveViewArea(right: number, down: number): void {
-        const oldX = this.viewPosition.x;
-        const oldY = this.viewPosition.y;
-
         const newX = clamp(0, this.viewPosition.x + right, this.world.width - this.viewWidth);
         const newY = clamp(0, this.viewPosition.y + down, this.world.height - this.viewHeight);
         this.viewPosition = new GridCoordinates(newX, newY);
 
-        right = this.viewPosition.x - oldX;
-        down = this.viewPosition.y - oldY;
-
-        // move existing canvas pixels
-        const translateX = right * MapUI.pixelsPerTile * -1;
-        const translateY = down * MapUI.pixelsPerTile * -1;
-        const context = this.html.getContext("2d")!;
-        context.drawImage(this.html, translateX, translateY);
-
-        // rerender newly visible tiles
-        if (right > 0) {
-            const newTiles = this.world.getTilesInRectangle((this.viewPosition.x + this.viewWidth - right), (this.viewPosition.y),  right, this.viewHeight);
-            for (const tile of newTiles) {
-                this.rerenderTile(tile);
-            }
-        }
-        if (right < 0) {
-            const newTiles = this.world.getTilesInRectangle((this.viewPosition.x), (this.viewPosition.y),  right * -1, this.viewHeight);
-            for (const tile of newTiles) {
-                this.rerenderTile(tile);
-            }
-        }
-        if (down > 0) {
-            const newTiles = this.world.getTilesInRectangle((this.viewPosition.x), (this.viewPosition.y + this.viewHeight - down),  this.viewWidth, down);
-            for (const tile of newTiles) {
-                this.rerenderTile(tile);
-            }
-        } if (down < 0) {
-            const newTiles = this.world.getTilesInRectangle((this.viewPosition.x), (this.viewPosition.y),  this.viewWidth, down * -1);
-            for (const tile of newTiles) {
-                this.rerenderTile(tile);
-            }
-        }
+        this.refresh();
     }
 
     handleClick(ev: MouseEvent): void {
@@ -145,15 +93,19 @@ export default class MapUI implements Page {
     handleKeyDown(ev: KeyboardEvent): void {
         const code = ev.code;
         if (code === "ArrowUp" || code === "KeyW") {
+            ev.preventDefault();
             this.moveViewArea(0, -1);
         }
         if (code === "ArrowLeft" || code === "KeyA") {
+            ev.preventDefault();
             this.moveViewArea(-1, 0);
         }
         if (code === "ArrowDown" || code === "KeyS") {
+            ev.preventDefault();
             this.moveViewArea(0, 1);
         }
         if (code === "ArrowRight" || code === "KeyD") {
+            ev.preventDefault();
             this.moveViewArea(1, 0);
         }
     }
