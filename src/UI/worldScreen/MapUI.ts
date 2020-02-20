@@ -50,9 +50,14 @@ export default class MapUI implements Page {
         }
     }
 
-    private drawSquareAtCoordinates(image: HTMLImageElement, coordinates: GridCoordinates): void {
+    private drawSquareAtCoordinates(image: HTMLImageElement, coordinates: GridCoordinates, alpha: number = 1, operation: typeof CanvasRenderingContext2D.prototype.globalCompositeOperation = "source-over"): void {
         const context = this.html.getContext("2d")!;
         context.imageSmoothingEnabled = false; // disable antialiasing to allow crispy pixel art
+        context.globalAlpha = alpha;
+        if (operation !== "source-over") {
+            context.globalCompositeOperation = operation;
+            console.log(alpha, operation);
+        }
 
         const x = coordinates.x - this.viewPosition.x;
         const y = coordinates.y - this.viewPosition.y;
@@ -70,6 +75,8 @@ export default class MapUI implements Page {
         const screenY = y * MapUI.pixelsPerTile - screenHeight + MapUI.pixelsPerTile; // make sure tall images line up properly
 
         context.drawImage(image, screenX, screenY, screenWidth, screenHeight);
+        context.globalCompositeOperation = "source-over";
+        context.globalAlpha = 1;
     }
 
     private selectTile(tile: Tile | null): void {
