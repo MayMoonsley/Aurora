@@ -43,10 +43,9 @@ export default class MapUI implements Page {
         const tilesInViewableArea = this.world.getTilesInRectangle(this.viewPosition.x, this.viewPosition.y, this.viewWidth, this.viewHeight);
         for (const tile of tilesInViewableArea)  {
             this.drawSquareAtCoordinates(tile.texture, tile.position);
-        }
-        // render the highlight reticle thing
-        if (this.highlightedCoordinates !== null) {
-            this.drawSquareAtCoordinates(MapUI.highlightImage, this.highlightedCoordinates);
+            if (tile.position === this.highlightedCoordinates) {
+                this.drawSquareAtCoordinates(tile.texture, tile.position, 0.75, "screen");
+            }
         }
     }
 
