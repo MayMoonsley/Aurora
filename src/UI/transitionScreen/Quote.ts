@@ -187,6 +187,34 @@ export default class Quote {
             `,
             "Quartermaster Allison Li, Aurora Expedition, T-minus-3 days to planetfall",
         ),
+        new Quote(
+            stripIndent`The trend of musicologists funding interstellar colonies was a big shock to everybody, but in
+            retrospect they should've seen it coming. Anybody in that field would kill for the opportunity
+            to create a culture devoid of the European musical tradition's influence. The new perspectives
+            they'd bring would revitalize a field that had run out of interesting problems after the breakthrough
+            discovery of Cold Jazz Fusion.`,
+            "Harmony of the Exospheres by Caritas Wilson"
+        ),
+        new Quote(
+            stripIndent`Octave was the first musically motivated colony. While nobody knows how the Colonial Alliance
+            Department of Cultural Innovation got their hands on enough artificial wombs to birth Octave's initial wave of
+            colonists, it's obvious why that was necessary. If you want a colony of people with no preexisting ideas of what
+            music should be, you need people who haven't heard music before.`,
+            "Harmony of the Exospheres by Caritas Wilson"
+        ),
+        new Quote(
+            stripIndent`The first attempt at starting musical blank slate colony went well at first. The project nearly
+            failed when they received a shipment of Wagner operas meant for the Holy Bruderhof Kingdom. The operas were
+            stored on a long-dead magnetic tape format, though, so disaster was averted.`,
+            "Harmony of the Exospheres by Caritas Wilson"
+        ),
+        new Quote(
+            stripIndent`Very few people know that the laws against broadcasting music between planets weren't the
+            music industry's idea. The musicologists at the Colonial Alliance Department of Cultural Innovation
+            were annoyed their experiments in creating new musical cultures kept getting ruined when colonists
+            overheard broadcasts from Interstellar Beats to Study To.`,
+            "Harmony of the Exospheres by Caritas Wilson"
+        )
     ];
 
     static getRandomQuote(): Quote {
