@@ -205,7 +205,7 @@ export default class Quote {
         new Quote(
             stripIndent`The first attempt at starting musical blank slate colony went well at first. The project nearly
             failed when they received a shipment of Wagner operas meant for the Holy Bruderhof Kingdom. The operas were
-            stored on a long-dead magnetic tape format, though, so disaster was averted.`,
+            stored on a long-dead magnetic tape format the colonists couldn't read, though, so disaster was averted.`,
             "Harmony of the Exospheres by Caritas Wilson"
         ),
         new Quote(
@@ -214,6 +214,27 @@ export default class Quote {
             were annoyed their experiments in creating new musical cultures kept getting ruined when colonists
             overheard broadcasts from Interstellar Beats to Study To.`,
             "Harmony of the Exospheres by Caritas Wilson"
+        ),
+        new Quote(
+            stripIndent`It's hard to believe now, but the set of people who got to experience zero-gravity was
+            a pretty exclusive club: astronauts, scientists, the rich and famous, the absurdly lucky.
+            Space elevators made sending people into orbit for "frivolous" reasons possible,
+            though, and once that happened, the stage was set for all sorts of recreational uses of zero-gravity.
+            It's no coincidence that the first Zeroball league was established less than a decade after the first
+            space elevator was built.`,
+            "Zeroball, Etc. by Parity Harker"
+        ),
+        new Quote(
+            stripIndent`Initially, weightless sports were all merely weightless versions of terrestrial sports.
+            Some fared better than others in the conversion. Most attempts to translate American football failed
+            because it's hard to have an intuition for how bodies behave in zero-gravity. A tackle leads to two
+            people sailing through the air until they hit a wall or another player. Hockey, which already has an
+            established underwater variant, failed for similar reasons. You can't push against the air as you can
+            with water, so once you're far from the walls, you're left doing your best bird impression in an attempt
+            to get somewhere.
+            
+            The only sport which survived the conversion well was, funnily enough, bocce ball.`,
+            "Zeroball, Etc. by Parity Harker"
         )
     ];
 
