@@ -252,6 +252,7 @@ export default class Quote {
             The only sport which survived the conversion well was, funnily enough, bocce ball.`,
             "Zeroball, Etc. by Parity Harker"
         ),
+        new Quote(
             stripIndent`
             Our species is much safer than when our ancestors lived on only one planet. If we had been unlucky, all of humanity
             could have been killed by one rogue asteroid, supervolcano, or gamma ray burst before ever reaching the stars. If a
