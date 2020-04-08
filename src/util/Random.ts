@@ -25,6 +25,27 @@ export namespace Random {
         return Math.random() < chance;
     }
 
+    // Generate a normal random variable using one half of the Box-Muller method.
+    export function gaussian(): number {
+        let u, v;
+        // These are bounded to (0, 1), exclusive on 0
+        do {
+            u = Math.random();
+        } while (u === 0);
+        do {
+            v = Math.random();
+        } while (v === 0);
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    }
+
+    // Generate a normal random variable with mean m and variance v.
+    // This relies on a property of normal random variables:
+    // If N is a normal random variable with mean 0 and variance 1,
+    // N * sqrt(V) + M has mean M and variance V.
+    export function normal(m: number, v: number): number {
+        return Math.sqrt(v) * gaussian() + m;
+    }
+
     // Randomly select an element from an array, with selection biased based on
     // a weight for each element.
     export function fromWeightedArray<T>(weightedElems: NonEmptyArray<[number, T]>): T {
