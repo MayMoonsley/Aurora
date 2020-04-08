@@ -15,7 +15,8 @@ const credits: CreditsEntry[] = [
     new CreditsEntry("Code Contributors", ["Mitchell Philipp", "Brad Baker", "Will Cooper"]),
     new CreditsEntry("Third Party Assets", [
         "Twemoji (MIT License for code, CC-BY for graphics)",
-        "IBM Plex Mono (Open Font License)"
+        "IBM Plex Mono (Open Font License)",
+        "NASA Images (public domain)",
     ]),
     new CreditsEntry("Aurora is released under the MIT License", [
         "Source code is available at github.com/GRarer/Aurora"

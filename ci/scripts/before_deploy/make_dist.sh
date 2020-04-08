@@ -9,6 +9,7 @@ fi
 mkdir -p "$target"
 
 cp -r assets "$target"
+cp favicon.ico "$target"
 
 if [ "$MINIFY" = true ]; then
   npm run minify

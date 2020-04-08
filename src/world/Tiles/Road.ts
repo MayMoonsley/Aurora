@@ -1,9 +1,10 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import { RoadTextureCross, RoadTextureVertical, RoadTextureHorizontal, RoadTextureTSouth, RoadTextureTNorth, RoadTextureTEast,
     RoadTextureTWest, RoadTextureCornerTopRight, RoadTextureCornerBottomRight, RoadTextureCornerTopLeft,
     RoadTextureCornerBottomLeft, } from "../../UI/Images.js";
 import World from "../World.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 
 export default class Road extends Tile {
@@ -81,7 +82,9 @@ export default class Road extends Tile {
 
         // 0 neighbors
         return RoadTextureVertical;
-
-
     }
+
+    static schema = S.classOf({ position: GridCoordinates.schema }, ({ position }) => new Road(position));
 }
+
+tileTypes[Road.name] = Road;

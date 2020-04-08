@@ -4,8 +4,8 @@ import Cost from "../resources/Cost";
 import { NamedTileType } from "../world/Tile";
 import { GameWindow } from "../UI/GameWindow";
 import EndingWorldScreen from "../UI/endingWorldScreen/EndingWorldScreen";
-import DescribedTilePredicate from "../predicates/DescribedTilePredicate";
-import { TilePredicate, } from "../predicates/predicates";
+import DescribedTileQuery from "../queries/DescribedTileQuery";
+import { TileQuery, queryTile } from "../queries/Queries.js";
 
 /* A project that can be performed by on tile
  * e.g., turning a wasteland tile into a habitat, or researching a technology
@@ -17,8 +17,8 @@ export default class TileProject {
         readonly projectDescription: string,
         protected action: ((position: GridCoordinates, run: Game) => void),
         readonly costs: Cost[],
-        readonly completionRequirements: DescribedTilePredicate[],
-        readonly visibilityRequirements: TilePredicate[],
+        readonly completionRequirements: DescribedTileQuery[],
+        readonly visibilityRequirements: TileQuery[],
     ) {}
 
     canDo(position: GridCoordinates, run: Game): boolean {
@@ -28,7 +28,7 @@ export default class TileProject {
     }
 
     isVisible(position: GridCoordinates, run: Game): boolean {
-        return this.visibilityRequirements.every(predicate => predicate(run, position));
+        return this.visibilityRequirements.every(query => queryTile(query)(run, position));
     }
 
     doAction(position: GridCoordinates, run: Game): void {
@@ -40,12 +40,14 @@ export default class TileProject {
     }
 }
 
-export function constructionProject( tile: NamedTileType, costs: Cost[], completionRequirements: DescribedTilePredicate[],
-    visibilityRequirements: TilePredicate[]): TileProject {
+export function constructionProject(
+    tile: NamedTileType, costs: Cost[], completionRequirements: DescribedTileQuery[], visibilityRequirements: TileQuery[]
+): TileProject {
     return new TileProject(
         `Construct ${tile.tileName}`, tile.tileDescription,
         (position: GridCoordinates, game: Game) => game.world.placeTile(new tile(position)),
-        costs, completionRequirements, visibilityRequirements);
+        costs, completionRequirements, visibilityRequirements
+    );
 }
 
 export class MonolithCompletionProject extends TileProject {
@@ -55,8 +57,8 @@ export class MonolithCompletionProject extends TileProject {
         private readonly activeMonolithTile: NamedTileType,
         private readonly circuitsTile: NamedTileType,
         readonly costs: Cost[],
-        readonly completionRequirements: DescribedTilePredicate[],
-        readonly visibilityRequirements: TilePredicate[],
+        readonly completionRequirements: DescribedTileQuery[],
+        readonly visibilityRequirements: TileQuery[],
     ) {
         super(
             title,

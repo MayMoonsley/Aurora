@@ -1,3 +1,5 @@
+import { Schema, Schemas as S } from "../serialize/Schema.js";
+
 /* Counts positive quantities of instances of some type.
  * e.g. the amounts of each resource in the inventory
  *
@@ -6,7 +8,7 @@
  * Setting negative quantities is disallowed and will result in a runtime exception.
  */
 export default class Quantities<T> {
-    private map: Map<T, number> = new Map<T, number>([]);
+    private map: Map<T, number> = new Map<T, number>();
 
     constructor() {}
 
@@ -48,5 +50,19 @@ export default class Quantities<T> {
             copy.add(key, this.get(key));
         }
         return copy;
+    }
+
+    // A 'Quantities' is serialized as a single-key record containing its
+    // internal 'Map', serialized as an array of key-value tuples.
+    static schema<K, R>(keys: Schema<K, R>): Schema<Quantities<K>, { map: [R, number][]; }> {
+        return S.contra(
+            S.recordOf({ map: S.map(keys, S.aNumber) }),
+            (q: Quantities<K>) => ({ map: q.map }),
+            rec => {
+                const q = new Quantities<K>();
+                q.map = rec.map;
+                return q;
+            },
+        );
     }
 }

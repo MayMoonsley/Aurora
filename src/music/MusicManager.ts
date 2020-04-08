@@ -218,7 +218,7 @@ export namespace MusicManager {
                 case MeasureContents.CHORDS:
                     await queueChord(startingTime);
                     break;
-                default: impossible();
+                default: impossible(k);
                 }
             }
         }

@@ -1,4 +1,4 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Species from "../../resources/Species.js";
 import Housing from "../../resources/Housing.js";
@@ -7,8 +7,9 @@ import TileProject from "../../tileProjects/TileProject.js";
 import Game from "../../Game.js";
 import { AiResearchTech, RationalityTech, CognitiveBiasesTech } from "../../techtree/TechTree.js";
 import { stripIndent } from "../../util/Text.js";
-import { techRequirement } from "../../predicates/DescribedTilePredicate.js";
-import { speciesHasPopulation, hasTech } from "../../predicates/predicates.js";
+import { techRequirement } from "../../queries/DescribedTileQuery.js";
+import { speciesHasPopulation, hasTech, notQuery } from "../../queries/Queries.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class Habitat extends Tile {
 
@@ -29,7 +30,7 @@ export default class Habitat extends Tile {
             [techRequirement(RationalityTech)],
             [
                 hasTech(CognitiveBiasesTech),
-                (game: Game) => !game.hasUnlockedTechnology(AiResearchTech),
+                notQuery(hasTech(AiResearchTech)),
                 speciesHasPopulation(Species.Human, 500),
             ]
         )
@@ -47,4 +48,15 @@ export default class Habitat extends Tile {
     getTileDescription(): string {
         return Habitat.tileDescription;
     }
+
+    static schema = S.classOf({
+        position: GridCoordinates.schema,
+        populationCapacity: Housing.schema
+    }, ({ position, populationCapacity }) => {
+        const h = new Habitat(position);
+        h.populationCapacity = populationCapacity;
+        return h;
+    });
 }
+
+tileTypes[Habitat.name] = Habitat;

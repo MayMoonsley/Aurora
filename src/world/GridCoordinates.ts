@@ -1,3 +1,5 @@
+import { Schemas as S } from "../serialize/Schema.js";
+
 export default class GridCoordinates {
 
     constructor(
@@ -12,4 +14,8 @@ export default class GridCoordinates {
     distanceFrom(other: GridCoordinates): number {
         return Math.hypot(Math.abs(this.x - other.x), Math.abs(this.y - other.y));
     }
+
+    static schema = S.classOf({
+        x: S.aNumber, y: S.aNumber
+    }, ({ x, y }) => new GridCoordinates(x, y));
 }

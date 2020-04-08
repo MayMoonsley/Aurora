@@ -1,7 +1,8 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import { HumanSeedCoreTexture } from "../../UI/Images.js";
 import { stripIndent } from "../../util/Text.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class HumanSeedCore extends Tile {
     protected texture: HTMLImageElement = HumanSeedCoreTexture;
@@ -22,4 +23,8 @@ export default class HumanSeedCore extends Tile {
     getTileDescription(): string {
         return HumanSeedCore.tileDescription;
     }
+
+    static schema = S.classOf({ position: GridCoordinates.schema }, ({ position }) => new HumanSeedCore(position));
 }
+
+tileTypes[HumanSeedCore.name] = HumanSeedCore;

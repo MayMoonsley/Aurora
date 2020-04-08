@@ -38,7 +38,7 @@ export default class MainMenu implements Page {
             UI.makeHeader("Aurora", 1),
             UI.makeDivContaining([
                 UI.makeButton("start_game", () => {
-                    const newGame = new Game();
+                    const newGame = Game.newGame();
                     enableCheats(newGame);
                     GameWindow.show(new WorldScreen(newGame));
                 }),

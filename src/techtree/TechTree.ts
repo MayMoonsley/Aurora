@@ -3,8 +3,6 @@ import Resource from "../resources/Resource.js";
 import Cost from "../resources/Cost.js";
 import { stripIndent } from "../util/Text.js";
 
-export const ResearchableTechnologies: Technology[] = [];
-
 export const IndustrialEngineeringTech = Technology.makeUnlockableTechnology(
     "Industrial Engineering",
     "Approaches for optimizing production processes",

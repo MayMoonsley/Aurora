@@ -1,9 +1,10 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Resource from "../../resources/Resource.js";
 import Conversion from "../../resources/Conversion.js";
 import Cost from "../../resources/Cost.js";
 import { MineshaftTexture } from "../../UI/Images.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class Mineshaft extends Tile {
     protected texture: HTMLImageElement = MineshaftTexture;
@@ -13,10 +14,10 @@ export default class Mineshaft extends Tile {
     }
 
     resourceConversions = [
-        new Conversion(
-            [new Cost(Resource.Energy, 50)],
-            [new Cost(Resource.Metal, 100)],
-            50,
+        Conversion.newConversion(
+            [new Cost(Resource.Energy, 75)],
+            [new Cost(Resource.Metal, 50)],
+            100,
         ),
     ];
 
@@ -28,4 +29,15 @@ export default class Mineshaft extends Tile {
     getTileDescription(): string {
         return Mineshaft.tileDescription;
     }
+
+    static schema = S.classOf({
+        position: GridCoordinates.schema,
+        resourceConversions: S.arrayOf(Conversion.schema),
+    }, ({ position, resourceConversions }) => {
+        const s = new Mineshaft(position);
+        s.resourceConversions = resourceConversions;
+        return s;
+    });
 }
+
+tileTypes[Mineshaft.name] = Mineshaft;

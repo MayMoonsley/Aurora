@@ -1,6 +1,7 @@
 import Cost from "./Cost";
 import Resource from "./Resource";
 import { Objects } from "../util/Objects.js";
+import { Schemas as S } from "../serialize/Schema.js";
 
 export default class Species {
     // all species instances are defined here
@@ -20,4 +21,14 @@ export default class Species {
             .map(k => Species[k])
             .filter((v): v is Species => v instanceof Species);
     }
+
+    static entries(): Record<string, Species> {
+        const acc: Record<string, Species> = {};
+        Objects.safeEntries(Species)
+            .filter((t): t is [keyof typeof Species, Species] => t[1] instanceof Species)
+            .forEach(([k, v]) => { acc[k] = v; });
+        return acc;
+    }
+
+    static schema = S.mapping(Species.entries());
 }

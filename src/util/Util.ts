@@ -25,6 +25,6 @@ export function gaussian(): number {
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
 
-export function impossible(): never {
+export function impossible(x: never): never {
     throw new Error("unreachable");
 }

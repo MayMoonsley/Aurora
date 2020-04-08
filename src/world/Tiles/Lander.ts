@@ -1,4 +1,4 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import TileProject from "../../tileProjects/TileProject.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Species from "../../resources/Species.js";
@@ -11,6 +11,7 @@ import Resource from "../../resources/Resource.js";
 import Greenhouse from "./Greenhouse.js";
 import Road from "./Road.js";
 import { stripIndent } from "../../util/Text.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class Lander extends Tile {
     protected texture: HTMLImageElement = LanderTexture;
@@ -58,4 +59,8 @@ export default class Lander extends Tile {
     getTileDescription(): string {
         return Lander.tileDescription;
     }
+
+    static schema = S.classOf({ position: GridCoordinates.schema }, ({ position }) => new Lander(position));
 }
+
+tileTypes[Lander.name] = Lander;

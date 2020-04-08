@@ -1,4 +1,4 @@
-import Tile from "./Tile.js";
+import Tile, { tileSchema } from "./Tile.js";
 import { Arrays } from "../util/Arrays.js";
 import Wasteland from "./Tiles/Wasteland.js";
 import Mountain from "./Tiles/Mountain.js";
@@ -7,62 +7,62 @@ import GridCoordinates from "./GridCoordinates.js";
 import Species from "../resources/Species.js";
 import Ruins from "./Tiles/Ruins.js";
 import { WorldGenerationParameters } from "./WorldGenerationParameters.js";
+import { Schemas as S } from "../serialize/Schema.js";
 
 export default class World {
-
-    width: number;
-    height: number;
 
     // coordinates of the view area's top-left tile, used by MapUI
     // this is stored as part of the world so that the current position persists between screens
     viewPosition: GridCoordinates = new GridCoordinates(0, 0);
 
-    /* this is used to track the past texture of a given tile type at a given position
-     * this lets tiles that have different random textures keep the same texture over the course of the run
-     * even if the individual tile is replaced with another of the same type
-     */
-    private pastTextureMap: Map<string, HTMLImageElement> = new Map();
+    private constructor(
+        public width: number,
+        public height: number,
+        // world grid is indexed grid[row][column]
+        public grid: Tile[][],
+    ) {}
 
-    // world grid is indexed grid[row][column]
-    grid: Tile[][];
-
-    constructor() {
-        this.width = WorldGenerationParameters.width;
-        this.height = WorldGenerationParameters.height;
+    static generateWorld(): World {
+        const width = WorldGenerationParameters.width;
+        const height = WorldGenerationParameters.height;
 
         // generate empty map
-        this.grid = new Array(this.height);
-        for (let row = 0; row < this.height; row++) {
-            this.grid[row] = new Array(this.width);
-            for (let column = 0; column < this.width; column++) {
-                this.grid[row][column] = new Wasteland(new GridCoordinates(column, row));
+        const grid = new Array(height);
+        for (let row = 0; row < height; row++) {
+            grid[row] = new Array(width);
+            for (let column = 0; column < width; column++) {
+                grid[row][column] = new Wasteland(new GridCoordinates(column, row));
             }
         }
+
+        const world = new World(width, height, grid);
 
         // place random mountains
         const mountainNumber = Random.intBetween(...WorldGenerationParameters.mountainRange);
         for (let i = 0; i < mountainNumber; i++) {
-            const wastelandTiles = this.getTiles().filter((tile: Tile) => (tile instanceof Wasteland));
+            const wastelandTiles = world.getTiles().filter((tile: Tile) => (tile instanceof Wasteland));
             if (Arrays.isNonEmpty(wastelandTiles)) {
                 const position = Random.fromArray(wastelandTiles).position;
-                this.placeTile(new Mountain(position));
+                world.placeTile(new Mountain(position));
             }
         }
 
         // place random alien ruins
         const ruinsNumber = Random.intBetween(...WorldGenerationParameters.ruinRange);
         for (let i = 0; i < ruinsNumber; i++) {
-            const wastelandTiles = this.getTiles().filter((tile: Tile) => (tile instanceof Wasteland));
+            const wastelandTiles = world.getTiles().filter((tile: Tile) => (tile instanceof Wasteland));
             if (Arrays.isNonEmpty(wastelandTiles)) {
                 const position = Random.fromArray(wastelandTiles).position;
-                this.placeTile(new Ruins(position));
+                world.placeTile(new Ruins(position));
             }
         }
 
         // place the tiles specified in the parameters
         for (const tile of WorldGenerationParameters.nonrandomTiles()) {
-            this.placeTile(tile);
+            world.placeTile(tile);
         }
+
+        return world;
     }
 
     // place a tile into the grid in the position given by the tile's coordinates
@@ -118,13 +118,9 @@ export default class World {
         return capacity;
     }
 
-    getPastTexture(tileType: typeof Tile & { name: string; }, position: GridCoordinates): HTMLImageElement | undefined {
-        const key: string = `${[tileType.name, position]}`;
-        return this.pastTextureMap.get(key);
-    }
-
-    storePastTexture(tileType: typeof Tile & { name: string; }, position: GridCoordinates, texture: HTMLImageElement): void {
-        const key: string = `${[tileType.name, position]}`;
-        this.pastTextureMap.set(key, texture);
-    }
+    static schema = S.classOf({
+        width: S.aNumber,
+        height: S.aNumber,
+        grid: S.arrayOf(S.arrayOf(tileSchema)),
+    }, ({ width, height, grid }) => new World(width, height, grid));
 }

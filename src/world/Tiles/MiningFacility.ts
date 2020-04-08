@@ -1,9 +1,10 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Resource from "../../resources/Resource.js";
 import Conversion from "../../resources/Conversion.js";
 import Cost from "../../resources/Cost.js";
 import { MiningFacilityTexture } from "../../UI/Images.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class MiningFacility extends Tile {
     protected texture: HTMLImageElement = MiningFacilityTexture;
@@ -13,14 +14,14 @@ export default class MiningFacility extends Tile {
     }
 
     resourceConversions = [
-        new Conversion(
-            [new Cost(Resource.Metal, 100)],
-            [new Cost(Resource.BuildingMaterials, 100)],
+        Conversion.newConversion(
+            [new Cost(Resource.Metal, 50)],
+            [new Cost(Resource.BuildingMaterials, 50)],
             25,
         ),
-        new Conversion(
-            [new Cost(Resource.Metal, 100)],
-            [new Cost(Resource.Electronics, 100)],
+        Conversion.newConversion(
+            [new Cost(Resource.Metal, 50)],
+            [new Cost(Resource.Electronics, 50)],
             25,
         )
     ];
@@ -33,4 +34,15 @@ export default class MiningFacility extends Tile {
     getTileDescription(): string {
         return MiningFacility.tileDescription;
     }
+
+    static schema = S.classOf({
+        position: GridCoordinates.schema,
+        resourceConversions: S.arrayOf(Conversion.schema),
+    }, ({ position, resourceConversions }) => {
+        const s = new MiningFacility(position);
+        s.resourceConversions = resourceConversions;
+        return s;
+    });
 }
+
+tileTypes[MiningFacility.name] = MiningFacility;

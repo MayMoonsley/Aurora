@@ -1,6 +1,7 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import { AlienCircuitsTexture } from "../../UI/Images.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class AlienCircuits extends Tile {
     protected texture: HTMLImageElement = AlienCircuitsTexture;
@@ -20,4 +21,8 @@ export default class AlienCircuits extends Tile {
     getTileDescription(): string {
         return AlienCircuits.tileDescription;
     }
+
+    static schema = S.classOf({ position: GridCoordinates.schema }, ({ position }) => new AlienCircuits(position));
 }
+
+tileTypes[AlienCircuits.name] = AlienCircuits;

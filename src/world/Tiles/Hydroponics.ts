@@ -1,10 +1,11 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Conversion from "../../resources/Conversion.js";
 import Resource from "../../resources/Resource.js";
 import Cost from "../../resources/Cost.js";
 import Species from "../../resources/Species.js";
 import { HydroponicsTexture } from "../../UI/Images.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class Hydroponics extends Tile {
     protected texture: HTMLImageElement = HydroponicsTexture;
@@ -14,7 +15,7 @@ export default class Hydroponics extends Tile {
     }
 
     resourceConversions = [
-        new Conversion(
+        Conversion.newConversion(
             [new Cost(Resource.Energy, 150)], [new Cost(Resource.Food, 2000)], 50
         ),
     ];
@@ -28,4 +29,15 @@ export default class Hydroponics extends Tile {
     getTileDescription(): string {
         return Hydroponics.tileDescription;
     }
+
+    static schema = S.classOf({
+        position: GridCoordinates.schema,
+        resourceConversions: S.arrayOf(Conversion.schema),
+    }, ({ position, resourceConversions }) => {
+        const s = new Hydroponics(position);
+        s.resourceConversions = resourceConversions;
+        return s;
+    });
 }
+
+tileTypes[Hydroponics.name] = Hydroponics;

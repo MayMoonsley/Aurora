@@ -1,4 +1,4 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes, wastelandVariantSchema } from "../Tile.js";
 import TileProject from "../../tileProjects/TileProject.js";
 import GridCoordinates from "../GridCoordinates.js";
 import { XenoEngineeringConstructionTexture } from "../../UI/Images.js";
@@ -11,22 +11,24 @@ import { constructionProject } from "../../tileProjects/TileProject.js";
 import NanotechFoundry from "./NanotechFoundry.js";
 import Monolith from "./Monolith.js";
 import NeuralEmulator from "./NeuralEmulator.js";
-import { roadRequirement, techRequirement, tileWithinDistanceRequirement,
-    nearMonolithRequirement } from "../../predicates/DescribedTilePredicate.js";
-import { hasTech, tileExists } from "../../predicates/predicates.js";
+import {
+    roadRequirement, techRequirement, tileWithinDistanceRequirement, nearMonolithRequirement
+} from "../../queries/DescribedTileQuery.js";
+import { hasTech, tileExists, notQuery } from "../../queries/Queries.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class ConstructionVictory extends Tile {
 
     protected texture: HTMLImageElement = XenoEngineeringConstructionTexture;
 
-    constructor(position: GridCoordinates) {
+    constructor(position: GridCoordinates, private wastelandVariant?: 1 | 2 | 3 | 4 | 5) {
         super(position);
     }
 
     possibleProjects: TileProject[] = [
         new TileProject("Break down construction site", "Revert this location to wasteland",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new Wasteland(position));
+                run.world.placeTile(new Wasteland(position, this.wastelandVariant));
             }, [], [], [],
         ),
 
@@ -37,7 +39,7 @@ export default class ConstructionVictory extends Tile {
                 nearMonolithRequirement(3),
                 techRequirement(NanoTech)
             ],
-            [hasTech(MonolithSurveyTech), (game: Game) => !tileExists(NanotechFoundry)(game)],
+            [hasTech(MonolithSurveyTech), notQuery(tileExists(NanotechFoundry))],
         ),
 
         constructionProject(NeuralEmulator,
@@ -52,7 +54,7 @@ export default class ConstructionVictory extends Tile {
                 tileWithinDistanceRequirement(Monolith, 2),
                 techRequirement(NeuralUploadingTech)
             ],
-            [hasTech(MonolithSurveyTech), (game: Game) => !tileExists(NeuralEmulator)(game)],
+            [hasTech(MonolithSurveyTech), notQuery(tileExists(NeuralEmulator))],
         ),
     ];
 
@@ -66,4 +68,15 @@ export default class ConstructionVictory extends Tile {
     getTileDescription(): string {
         return ConstructionVictory.tileDescription;
     }
+
+    static schema = S.contra(
+        S.recordOf({
+            position: GridCoordinates.schema,
+            wastelandVariant: wastelandVariantSchema,
+        }),
+        (x: ConstructionVictory) => ({ position: x.position, wastelandVariant: x.wastelandVariant }),
+        ({ position, wastelandVariant }) => new ConstructionVictory(position, wastelandVariant),
+    );
 }
+
+tileTypes[ConstructionVictory.name] = ConstructionVictory;

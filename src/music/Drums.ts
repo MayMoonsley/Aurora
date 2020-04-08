@@ -65,7 +65,7 @@ export class Drumkit {
                 start: start,
                 duration: 0.2
             });
-        default: impossible();
+        default: impossible(drum);
         }
     }
 

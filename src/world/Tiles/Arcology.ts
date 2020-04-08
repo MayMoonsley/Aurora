@@ -1,4 +1,4 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes } from "../Tile.js";
 import GridCoordinates from "../GridCoordinates.js";
 import Species from "../../resources/Species.js";
 import Housing from "../../resources/Housing.js";
@@ -7,8 +7,9 @@ import Game from "../../Game.js";
 import { AiResearchTech, RationalityTech, CognitiveBiasesTech } from "../../techtree/TechTree.js";
 import TileProject from "../../tileProjects/TileProject.js";
 import { stripIndent } from "../../util/Text.js";
-import { techRequirement } from "../../predicates/DescribedTilePredicate.js";
-import { hasTech, speciesHasPopulation } from "../../predicates/predicates.js";
+import { techRequirement } from "../../queries/DescribedTileQuery.js";
+import { hasTech, speciesHasPopulation, notQuery } from "../../queries/Queries.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class Arcology extends Tile {
 
@@ -29,7 +30,7 @@ export default class Arcology extends Tile {
             [techRequirement(RationalityTech)],
             [
                 hasTech(CognitiveBiasesTech),
-                (game: Game) => !game.hasUnlockedTechnology(AiResearchTech),
+                notQuery(hasTech(AiResearchTech)),
                 speciesHasPopulation(Species.Human, 500),
             ]
         )
@@ -47,4 +48,15 @@ export default class Arcology extends Tile {
     getTileDescription(): string {
         return Arcology.tileDescription;
     }
+
+    static schema = S.classOf({
+        position: GridCoordinates.schema,
+        populationCapacity: Housing.schema,
+    }, ({ position, populationCapacity }) => {
+        const r = new Arcology(position);
+        r.populationCapacity = populationCapacity;
+        return r;
+    });
 }
+
+tileTypes[Arcology.name] = Arcology;

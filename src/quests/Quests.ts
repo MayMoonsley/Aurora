@@ -19,8 +19,7 @@ import AlienCircuits from "../world/Tiles/AlienCircuits.js";
 import HumanSeedCore from "../world/Tiles/HumanSeedCore.js";
 import HumanCircuits from "../world/Tiles/HumanCircuits.js";
 import { stripIndent } from "../util/Text.js";
-import { allTilesAreOfType, hasTech, tileExists, hasResource } from "../predicates/predicates.js";
-import Game from "../Game.js";
+import { allTilesAreOfType, hasTech, tileExists, hasResource, hasTotalPopulation } from "../queries/Queries.js";
 
 export const AlienEnding: Ending = new Ending("Final Mission Report",
     stripIndent`
@@ -95,7 +94,6 @@ export const QuestMonolithSurvey: QuestStage = new QuestStage(
             QuestActivateMonolith
         )
     ],
-    `Use the "WASD" or arrow keys to move around the map`,
 );
 
 export const QuestAlienHistory: QuestStage = new QuestStage(
@@ -112,7 +110,7 @@ export const QuestExcavate: QuestStage = new QuestStage(
     `Excavate the ${Ruins.tileName} to extract resources`,
     [
         new QuestPath(
-            (game: Game) => game.world.getTiles().some(tile => tile instanceof Recycler),
+            tileExists(Recycler),
             QuestAlienHistory,
         )
     ]
@@ -126,13 +124,14 @@ export const QuestXenoLab: QuestStage = new QuestStage(
             QuestExcavate,
         )
     ],
+    `Use the "WASD" or arrow keys to move around the map`,
 );
 
 export const TutorialQuestPopulation: QuestStage = new QuestStage(
     "Grow total worker population to 250",
     [
         new QuestPath(
-            (game: Game) => game.inventory.getTotalPopulation() >= 250,
+            hasTotalPopulation(250),
             QuestXenoLab,
         )
     ],

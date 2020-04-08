@@ -5,6 +5,7 @@ import Quantities from "../util/Quantities.js";
 import Species from "./Species.js";
 import World from "../world/World.js";
 import { clamp } from "../util/Util.js";
+import { Schemas as S } from "../serialize/Schema.js";
 
 export default class Inventory {
 
@@ -33,9 +34,9 @@ export default class Inventory {
         this.populationQuantities.set(species, clamp(0, this.populationQuantities.get(species), this.world.getPopulationCapacity(species)));
     }
 
-    // makes the entire population pool available as workers (makes all workers unoccupied)
-    releaseWorkers(): void {
-        this.availableWorkers = this.populationQuantities.getSum();
+    // makes a quantity of the population available as workers
+    releaseWorkers(quantity: number = Number.POSITIVE_INFINITY): void {
+        this.availableWorkers = Math.min(this.availableWorkers + quantity, this.populationQuantities.getSum());
     }
 
     occupyWorkers(quantity: number): void {
@@ -167,4 +168,25 @@ export default class Inventory {
         clone.availableWorkers = this.availableWorkers;
         return clone;
     }
+
+    static schema = S.injecting(
+        S.recordOf({
+            resourceQuantities: Quantities.schema(Resource.schema),
+            populationQuantities: Quantities.schema(Species.schema),
+            availableWorkers: S.aNumber,
+        }),
+        (inv: Inventory) => ({
+            resourceQuantities: inv.resourceQuantities,
+            populationQuantities: inv.populationQuantities,
+            availableWorkers: inv.availableWorkers,
+        }),
+        (world: World) => ({ resourceQuantities, populationQuantities, availableWorkers }) => {
+            const inv = new Inventory(world);
+            inv.resourceQuantities = resourceQuantities;
+            inv.populationQuantities = populationQuantities;
+            inv.availableWorkers = availableWorkers;
+            return inv;
+        }
+    );
+
 }

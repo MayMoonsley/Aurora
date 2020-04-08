@@ -1,4 +1,4 @@
-import Tile from "../Tile.js";
+import Tile, { tileTypes, wastelandVariantSchema } from "../Tile.js";
 import TileProject from "../../tileProjects/TileProject.js";
 import GridCoordinates from "../GridCoordinates.js";
 import { LabConstructionTexture } from "../../UI/Images.js";
@@ -13,22 +13,24 @@ import Wasteland from "./Wasteland.js";
 import { SurveyTech, AiResearchTech } from "../../techtree/TechTree.js";
 import Species from "../../resources/Species.js";
 import { constructionProject } from "../../tileProjects/TileProject.js";
-import { roadRequirement, techRequirement, speciesPopulationRequirement,
-    nearRuinsOrMonolith } from "../../predicates/DescribedTilePredicate.js";
-import { hasTech } from "../../predicates/predicates.js";
+import {
+    roadRequirement, techRequirement, speciesPopulationRequirement, nearRuinsOrMonolith
+} from "../../queries/DescribedTileQuery.js";
+import { hasTech } from "../../queries/Queries.js";
+import { Schemas as S } from "../../serialize/Schema.js";
 
 export default class ConstructionLaboratory extends Tile {
 
     protected texture: HTMLImageElement = LabConstructionTexture;
 
-    constructor(position: GridCoordinates) {
+    constructor(position: GridCoordinates, private wastelandVariant?: 1 | 2 | 3 | 4 | 5) {
         super(position);
     }
 
     possibleProjects: TileProject[] = [
         new TileProject("Break down construction site", "Revert this location to wasteland",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new Wasteland(position));
+                run.world.placeTile(new Wasteland(position, this.wastelandVariant));
             }, [], [], [],
         ),
 
@@ -69,4 +71,15 @@ export default class ConstructionLaboratory extends Tile {
     getTileDescription(): string {
         return ConstructionLaboratory.tileDescription;
     }
+
+    static schema = S.contra(
+        S.recordOf({
+            position: GridCoordinates.schema,
+            wastelandVariant: wastelandVariantSchema,
+        }),
+        (x: ConstructionLaboratory) => ({ position: x.position, wastelandVariant: x.wastelandVariant }),
+        ({ position, wastelandVariant }) => new ConstructionLaboratory(position, wastelandVariant),
+    );
 }
+
+tileTypes[ConstructionLaboratory.name] = ConstructionLaboratory;

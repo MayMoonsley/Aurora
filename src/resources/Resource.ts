@@ -1,4 +1,5 @@
 import { Objects } from "../util/Objects.js";
+import { Schemas as S } from "../serialize/Schema.js";
 
 export default class Resource {
     // all resource instances are defined here
@@ -31,4 +32,14 @@ export default class Resource {
             .map(k => Resource[k])
             .filter((v): v is Resource => v instanceof Resource);
     }
+
+    static entries(): Record<string, Resource> {
+        const acc: Record<string, Resource> = {};
+        Objects.safeEntries(Resource)
+            .filter((t): t is [keyof typeof Resource, Resource] => t[1] instanceof Resource)
+            .forEach(([k, v]) => { acc[k] = v; });
+        return acc;
+    }
+
+    static schema = S.mapping(Resource.entries());
 }
