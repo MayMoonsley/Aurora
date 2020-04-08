@@ -1,12 +1,41 @@
 .main-menu {
-    display: flex;
-    flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: black;
+    background-image: url(../assets/ui/planet.png);
+    background-color: black;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+}
+
+.main-menu.pause-menu {
+
+    background-image: none;
 }
 
 .main-menu h1 {
     font-size: 40pt;
-    margin: 0;
+    margin-left: 20px;
+    margin-bottom: 0;
+    margin-top: 0;
     padding: 0;
+}
+
+.main-menu h2 {
+    font-size: 30pt;
+    margin-left: 20px;
+    margin-bottom: 0;
+    margin-top: 16px;
+    padding: 0;
+}
+
+.main-menu-options {
+    margin-left: 20px;
 }
 
 .main-menu-options button {
@@ -49,25 +78,25 @@
 .credits-entry-large h1 {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: 24pt;
+    font-size: 28pt;
 }
 
 .credits-entry-small h1 {
     margin-top: 0px;
     margin-bottom: 0px;
-    font-size: 20pt;
+    font-size: 22pt;
 }
 
 .credits-entry-large p {
     margin-top: 0;
     margin-bottom: 0;
-    font-size: 18pt;
+    font-size: 20pt;
 }
 
 .credits-entry-small p {
     margin-top: 0;
     margin-bottom: 0;
-    font-size: 16pt;
+    font-size: 18pt;
 }
 
 .credits button {

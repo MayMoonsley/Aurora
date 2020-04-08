@@ -33,9 +33,9 @@ export default class Inventory {
         this.populationQuantities.set(species, clamp(0, this.populationQuantities.get(species), this.world.getPopulationCapacity(species)));
     }
 
-    // makes the entire population pool available as workers (makes all workers unoccupied)
-    releaseWorkers(): void {
-        this.availableWorkers = this.populationQuantities.getSum();
+    // makes a quantity of the population available as workers
+    releaseWorkers(quantity: number = Number.POSITIVE_INFINITY): void {
+        this.availableWorkers = Math.min(this.availableWorkers + quantity, this.populationQuantities.getSum());
     }
 
     occupyWorkers(quantity: number): void {

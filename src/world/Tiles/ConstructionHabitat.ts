@@ -20,7 +20,7 @@ export default class ConstructionHabitat extends Tile {
 
     protected texture: HTMLImageElement = HabConstructionTexture;
 
-    constructor(position: GridCoordinates) {
+    constructor(position: GridCoordinates, private wastelandVariant: 1 | 2 | 3 | 4 | 5) {
         super(position);
     }
 
@@ -28,7 +28,7 @@ export default class ConstructionHabitat extends Tile {
 
         new TileProject("Break down construction site", "Revert this location to wasteland",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new Wasteland(position));
+                run.world.placeTile(new Wasteland(position, this.wastelandVariant));
             }, [], [], [],
         ),
 

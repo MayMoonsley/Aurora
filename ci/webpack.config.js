@@ -23,11 +23,31 @@ module.exports = {
     rules: [
       {
         test: /\.css$/i,
-        use: [ MiniCssExtractPlugin.loader, "css-loader" ]
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+        ]
       },
+      // URL handling for assets/**/*.png
+      {
+        test: /assets\/.*\.png$/i,
+        loader: "file-loader",
+        options: {
+          emitFile: false,
+          // Copy in path components relative to assets
+          regExp: /assets\/((?:.*?\/)*)[^\/]+\.png/,
+          name: "./assets/[1][name].[ext]",
+        },
+      },
+      // URL handling for fonts
       {
         test: /\.ttf$/i,
-        use: "url-loader?limit=100000&name=./assets/fonts/[name].[ext]",
+        loader: "url-loader",
+        options: {
+          limit: 100000,
+          name: "./assets/fonts/[name].[ext]",
+          emitFile: false,
+        },
       },
       {
         test: /\.html$/i,

@@ -10,7 +10,6 @@ import Road from "./Road.js";
 import ConstructionHabitat from "./ConstructionHabitat.js";
 import ConstructionLaboratory from "./ConstructionLaboratory.js";
 import ConstructionIndustry from "./ConstructionIndustry.js";
-import World from "../World.js";
 import { MonolithSurveyTech } from "../../techtree/TechTree.js";
 import ConstructionVictory from "./ConstructionVictory.js";
 import NeuralEmulator from "./NeuralEmulator.js";
@@ -22,16 +21,23 @@ import { roadRequirement } from "../../predicates/DescribedTilePredicate.js";
 
 export default class Wasteland extends Tile {
 
-    protected texture: HTMLImageElement = Random.fromWeightedArray([
-        [1 / 8, WastelandTexture1],
-        [1 / 8, WastelandTexture2],
-        [1 / 8, WastelandTexture3],
-        [1 / 8, WastelandTexture4],
-        [4 / 8, WastelandTexture5],
-    ]);
+    protected texture: HTMLImageElement = WastelandTexture5;
+    private textureVariant: 1 | 2 | 3 | 4 |5;
 
-    constructor(position: GridCoordinates) {
+
+    constructor(position: GridCoordinates, textureVariant?: 1 | 2 | 3 | 4 | 5) {
         super(position);
+        if (textureVariant) {
+            this.textureVariant = textureVariant;
+        } else {
+            this.textureVariant = Random.fromWeightedArray([
+                [1 / 8, 1],
+                [1 / 8, 2],
+                [1 / 8, 3],
+                [1 / 8, 4],
+                [4 / 8, 5],
+            ]);
+        }
     }
 
     possibleProjects: TileProject[] = [
@@ -40,7 +46,7 @@ export default class Wasteland extends Tile {
             "Create habitat construction site",
             "Designate this location for construction of habitation and life support facilities",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new ConstructionHabitat(position));
+                run.world.placeTile(new ConstructionHabitat(position, this.textureVariant));
             }, [], [], [],
         ),
 
@@ -48,19 +54,19 @@ export default class Wasteland extends Tile {
             "Create industry construction site",
             "Designate this location for construction of industrial facilities and infrastructure",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new ConstructionIndustry(position));
+                run.world.placeTile(new ConstructionIndustry(position, this.textureVariant));
             }, [], [], [],
         ),
 
         new TileProject("Create laboratory construction site", "Designate this location for construction of research laboratories",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new ConstructionLaboratory(position));
+                run.world.placeTile(new ConstructionLaboratory(position, this.textureVariant));
             }, [], [], [],
         ),
 
         new TileProject("Create xenoengineering construction site", "Designate this location for construction of advanced technologies",
             (position: GridCoordinates, run: Game) => {
-                run.world.placeTile(new ConstructionVictory(position));
+                run.world.placeTile(new ConstructionVictory(position, this.textureVariant));
             },
             [],
             [],
@@ -90,13 +96,18 @@ export default class Wasteland extends Tile {
     }
 
     // we overload this to avoid having different wasteland textures in the same place in the same run
-    getTexture(world: World): HTMLImageElement {
-        const history = world.getPastTexture(Wasteland, this.position);
-        if (history) {
-            return history;
-        } else {
-            world.storePastTexture(Wasteland, this.position, this.texture);
-            return this.texture;
+    getTexture(): HTMLImageElement {
+        switch (this.textureVariant) {
+        case 1:
+            return WastelandTexture1;
+        case 2:
+            return WastelandTexture2;
+        case 3:
+            return WastelandTexture3;
+        case 4:
+            return WastelandTexture4;
+        case 5:
+            return WastelandTexture5;
         }
     }
 }

@@ -17,12 +17,6 @@ export default class World {
     // this is stored as part of the world so that the current position persists between screens
     viewPosition: GridCoordinates = new GridCoordinates(0, 0);
 
-    /* this is used to track the past texture of a given tile type at a given position
-     * this lets tiles that have different random textures keep the same texture over the course of the run
-     * even if the individual tile is replaced with another of the same type
-     */
-    private pastTextureMap: Map<string, HTMLImageElement> = new Map();
-
     // world grid is indexed grid[row][column]
     grid: Tile[][];
 
@@ -116,15 +110,5 @@ export default class World {
         }
 
         return capacity;
-    }
-
-    getPastTexture(tileType: typeof Tile & { name: string; }, position: GridCoordinates): HTMLImageElement | undefined {
-        const key: string = `${[tileType.name, position]}`;
-        return this.pastTextureMap.get(key);
-    }
-
-    storePastTexture(tileType: typeof Tile & { name: string; }, position: GridCoordinates, texture: HTMLImageElement): void {
-        const key: string = `${[tileType.name, position]}`;
-        this.pastTextureMap.set(key, texture);
     }
 }

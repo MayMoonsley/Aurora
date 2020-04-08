@@ -9,7 +9,7 @@ export default class PauseMenu implements Page {
     readonly html: HTMLElement;
 
     constructor(private run: Game) {
-        this.html = UI.makeDiv(["main-menu"]);
+        this.html = UI.makeDiv(["main-menu", "pause-menu"]);
         this.refresh();
     }
 

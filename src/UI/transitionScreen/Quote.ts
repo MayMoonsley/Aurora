@@ -79,6 +79,13 @@ export default class Quote {
         ),
         new Quote(
             stripIndent`
+            We had this whole big beautiful place for discovery, and all we could think to do
+            with it was wipe out everything that made it worth discovering.
+            `,
+            "Buzz Aldrin"
+        ),
+        new Quote(
+            stripIndent`
                 The planets designated Thesan, Eos, Austra, and Aurora are
                 each at least 200 light-years from the nearest inhabited star
                 system. Until now all colonies in the Stellar Alliance have
@@ -89,6 +96,15 @@ export default class Quote {
                 programmed to ensure that its mission is completed.
             `,
             "Dawn Program mission proposal, published 10942214400 SPE"
+        ),
+        new Quote(
+            stripIndent`
+                The Colonial Alliance Research Agency has been enthusiastic about adopting Neuromorphic Heuristic Intelligences.
+                These cutting-edge AI brains have assisted in many important scientific and exploratory projects, but where they
+                most excel is in administrative roles. An Overseer AI can monitor and direct a project's data, materials, and
+                human resources with laser-like focus towards completing its programmed objectives.
+            `,
+            `Isaac Calvin, CEO of CabiAI`
         ),
         new Quote(
             stripIndent`
@@ -139,7 +155,7 @@ export default class Quote {
         new Quote(
             stripIndent`
             Some early interstellar colonial projects, such as the Mayflower Expedition, the Holy
-            Burderhof Kingdom, and New Rojava claimed to be returning to various "traditional" past
+            Bruderhof Kingdom, and New Rojava claimed to be returning to various "traditional" past
             ways of life, but many interstellar travellers were motivated by new, unproven ideologies.
 
 
@@ -235,7 +251,48 @@ export default class Quote {
             
             The only sport which survived the conversion well was, funnily enough, bocce ball.`,
             "Zeroball, Etc. by Parity Harker"
-        )
+        ),
+            stripIndent`
+            Our species is much safer than when our ancestors lived on only one planet. If we had been unlucky, all of humanity
+            could have been killed by one rogue asteroid, supervolcano, or gamma ray burst before ever reaching the stars. If a
+            planetary-scale disaster happened today it would be a tragedy, but humanity would still live on across dozens of major
+            populated worlds and hundreds of minor planets and stations.
+
+
+            Despite the safety benefits of an interstellar civilization, there are still existential risks. For example, a self-upgrading
+            general artificial intelligence would not be confined to one planet or star system. We should also be concerned about
+            militarized nanotechnology and biotechnology, as well as more speculative threats such as memetic weapons.
+            `,
+            "Journal of the Moretrue Institute for Effective Policy",
+        ),
+        new Quote(
+            stripIndent`
+            New Plymouth's Hall of the Founders was the first building of its size to be produced through structural flash-printing.
+            It was built by the Mayflower colonists as a short-term shelter, but they soon found that its high-density
+            construction would make demolishing the "temporary" structure prohibitively expensive. The dome still stands today,
+            serving as a museum and national monument. Despite the difficulty of demolishing or even renovating flash-printed
+            buildings once the ferrofoam has solidified, the speed and labor-saving make them an indispensible asset in the first
+            few years after planetfall.
+            `,
+            "Introduction to Frontier Engineering by Robin North",
+        ),
+        new Quote(
+            stripIndent`
+            The latest trend in computer automation is Neuromorphic Heuristic Intelligences, which are based on rough simulations
+            of the cognitive machinery of the human brain. NHIs are not qualitatively more intelligent than humans, which is why
+            the Colonial Alliance does not consider them to be prohibited under the San Jose Accords. However, they are quantitatively
+            more intelligent than humans, able to think faster and manage a large number of tasks while remaining completely focused
+            on their programmed objectives. Many experts believe that this is sufficient reason to restrict the use of this technology.
+            `,
+            "Dr. Alex Scott, Moretrue Institute for Effective Policy",
+        ),
+        new Quote(
+            stripIndent`
+            Kids who grew up after the terraforming don't realize how lucky they are. I remember when you couldn't take a step outside
+            Shackleton Base without a pressure suit. Every cubic meter of breathable air was a miracle.
+            `,
+            "An Oral History of The Lunar Republics"
+        ),
     ];
 
     static getRandomQuote(): Quote {
